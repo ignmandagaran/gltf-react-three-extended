@@ -20,6 +20,7 @@ export default function Viewer({
   emissive,
   emissiveIntensity,
   specular,
+  backgroundColor,
 }) {
   const scene = useStore((store) => store.scene)
   const ref = useRef()
@@ -60,6 +61,7 @@ export default function Viewer({
   return (
     <Canvas gl={{ preserveDrawingBuffer: true }} shadows dpr={[1, 1.5]} camera={{ position: [0, 0, 150], fov: 50 }}>
       <ambientLight intensity={0.25} />
+      {backgroundColor && <color attach="background" args={[backgroundColor]} />}
       <Suspense fallback={null}>
         <Stage
           controls={ref}

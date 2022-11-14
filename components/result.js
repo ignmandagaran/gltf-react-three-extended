@@ -44,6 +44,7 @@ const Result = () => {
   const preview = useControls(
     'preview',
     {
+      backgroundColor: { value: '#fff' },
       autoRotate: true,
       contactShadow: true,
       intensity: { value: 1, min: 0, max: 2, step: 0.1, label: 'light intensity' },
