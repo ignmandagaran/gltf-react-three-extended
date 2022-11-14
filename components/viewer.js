@@ -1,6 +1,6 @@
 import React, { Suspense, useLayoutEffect, useRef } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Stage, SpotLight } from '@react-three/drei'
+import { OrbitControls, Stage } from '@react-three/drei'
 import useStore from '../utils/store'
 
 export default function Viewer({
