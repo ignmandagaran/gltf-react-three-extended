@@ -126,7 +126,7 @@ const Result = () => {
       ) : (
         <div className="grid h-full grid-cols-5">
           {code && <Code>{code}</Code>}
-          <section className="w-full h-full col-span-2">
+          <section className="w-full h-full col-span-3">
             {scene && <Viewer scene={scene} {...config} {...materialProps} {...preview} />}
           </section>
         </div>
