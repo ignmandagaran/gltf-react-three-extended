@@ -2,7 +2,6 @@ import React, { Suspense, useLayoutEffect, useRef } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Stage } from '@react-three/drei'
 import useStore from '../utils/store'
-import { BackSide } from "three"
 
 export default function Viewer({
   shadows,
