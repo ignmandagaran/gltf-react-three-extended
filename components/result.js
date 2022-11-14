@@ -35,9 +35,9 @@ const Result = () => {
       clearcoatRoughness: { value: 0, min: 0, max: 1 },
       transmission: { value: 0, min: 0, max: 1 },
       metalness: { value: 0, min: 0, max: 1 },
-      emissive: { value: "#F00" },
       emissiveIntensity: { value: 1, min: 0, max: 100, step: 0.1 },
       specular: { value: "#111" },
+      side: { value: "0", min: 0, max: 2, step: 1, hint: 'FrontSide = 0 | BackSide = 1 | DoubleSide = 2' },
     }
   )
 

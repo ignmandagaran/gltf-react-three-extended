@@ -2,6 +2,7 @@ import React, { Suspense, useLayoutEffect, useRef } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Stage } from '@react-three/drei'
 import useStore from '../utils/store'
+import { BackSide } from "three"
 
 export default function Viewer({
   shadows,
@@ -17,7 +18,7 @@ export default function Viewer({
   clearcoatRoughness,
   transmission,
   metalness,
-  emissive,
+  side,
   emissiveIntensity,
   specular,
   backgroundColor,
@@ -38,9 +39,9 @@ export default function Viewer({
         obj.material.clearcoatRoughness = clearcoatRoughness
         obj.material.transmission = transmission
         obj.material.metalness = metalness
-        // obj.material.emissive = emissive
         obj.material.emissiveIntensity = emissiveIntensity
         obj.material.specular = specular
+        obj.material.side = side
       }
     })
   }, [
@@ -53,9 +54,9 @@ export default function Viewer({
     clearcoatRoughness,
     transmission,
     metalness,
-    emissive,
     emissiveIntensity,
     specular,
+    side
   ])
 
   return (
