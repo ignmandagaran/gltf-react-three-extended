@@ -1,18 +1,19 @@
 import React, { useEffect, useMemo, useCallback } from 'react'
 import copy from 'clipboard-copy'
 import saveAs from 'file-saver'
-import { Leva, useControls, button } from 'leva'
+import { Leva, folder, useControls, button } from 'leva'
 import toast from 'react-hot-toast'
 import { isGlb } from '../utils/isExtension'
 import useSandbox from '../utils/useSandbox'
 import Viewer from './viewer'
 import Code from './code'
 import useStore from '../utils/store'
+import { useReproducibleControls } from '../utils/useReproducibleControls'
 
 const Result = () => {
-  const { buffer, fileName, textOriginalFile, scene, code, createZip, generateScene, animations } = useStore()
+  const { buffer, fileName, textOriginalFile, scene, code, createZip, generateScene } = useStore()
 
-  const [config, setConfig] = useControls(() => ({
+  const controls = useReproducibleControls({
     types: { value: false, hint: 'Add Typescript definitions' },
     shadows: { value: true, hint: 'Let meshes cast and receive shadows' },
     instanceall: { label: 'instance all', value: false, hint: 'Instance every geometry (for cheaper re-use)' },
@@ -23,11 +24,7 @@ const Result = () => {
     aggressive: { value: false, hint: 'Aggressively prune the graph (empty groups, transform overlap)' },
     meta: { value: false, hint: 'Include metadata (as userData)' },
     precision: { value: 2, min: 1, max: 8, step: 1, hint: 'Number of fractional digits (default: 2)' },
-  }))
-
-  const materialProps = useControls(
-    'material', 
-    {
+    material: folder({
       roughness: { value: 0.5, min: 0, max: 1 },
       ior: { value: 1.5, min: 1, max: 2.33 },
       reflectivity: { value: 0.5, min: 0, max: 1 },
@@ -38,15 +35,11 @@ const Result = () => {
       emissiveIntensity: { value: 1, min: 0, max: 100, step: 0.1 },
       specular: { value: "#111" },
       side: { value: "0", min: 0, max: 2, step: 1, hint: 'FrontSide = 0 | BackSide = 1 | DoubleSide = 2' },
-    }
-  )
-
-  const preview = useControls(
-    'preview',
-    {
+    }),
+    preview: folder({
       backgroundColor: { value: '#fff' },
-      autoRotate: true,
-      contactShadow: true,
+      autoRotate: { value: true},
+      contactShadow: {value: true},
       intensity: { value: 1, min: 0, max: 2, step: 0.1, label: 'light intensity' },
       preset: {
         value: 'rembrandt',
@@ -56,24 +49,38 @@ const Result = () => {
         value: 'city',
         options: ['', 'sunset', 'dawn', 'night', 'warehouse', 'forest', 'apartment', 'studio', 'city', 'park', 'lobby'],
       },
-    },
-    { collapsed: true }
-  )
+    }),
+  })
+
+  // const preview = useControls(
+  //   'preview',
+  //   {
+  //     backgroundColor: { value: '#fff' },
+  //     autoRotate: true,
+  //     contactShadow: true,
+  //     intensity: { value: 1, min: 0, max: 2, step: 0.1, label: 'light intensity' },
+  //     preset: {
+  //       value: 'rembrandt',
+  //       options: ['rembrandt', 'portrait', 'upfront', 'soft'],
+  //     },
+  //     environment: {
+  //       value: 'city',
+  //       options: ['', 'sunset', 'dawn', 'night', 'warehouse', 'forest', 'apartment', 'studio', 'city', 'park', 'lobby'],
+  //     },
+  //   },
+  //   { collapsed: true }
+  // )
 
   const [loading, sandboxId, error, sandboxCode] = useSandbox({
     fileName,
     textOriginalFile,
     code,
-    config: { ...config, ...preview },
+    config: { ...controls, ...controls.preview },
   })
 
   useEffect(() => {
-    setConfig({ verbose: animations })
-  }, [animations])
-
-  useEffect(() => {
-    generateScene(config)
-  }, [config])
+    generateScene(controls)
+  }, [controls])
 
   const download = useCallback(async () => {
     createZip({ sandboxCode })
@@ -115,7 +122,7 @@ const Result = () => {
     })
 
     return temp
-  }, [fileName, loading, error, sandboxCode, sandboxId, config.types])
+  }, [fileName, loading, error, sandboxCode, sandboxId, controls.types])
 
   useControls('exports', exports, { collapsed: true }, [exports])
 
@@ -127,7 +134,7 @@ const Result = () => {
         <div className="grid h-full grid-cols-5">
           {code && <Code>{code}</Code>}
           <section className="w-full h-full col-span-3">
-            {scene && <Viewer scene={scene} {...config} {...materialProps} {...preview} />}
+            {scene && <Viewer scene={scene} {...controls} {...controls.preview} />}
           </section>
         </div>
       )}
