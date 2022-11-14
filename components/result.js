@@ -107,7 +107,7 @@ const Result = () => {
       const name = 'codesandbox' + (loading ? ' loading' : '')
       temp[name] = button(() => {
         location.href = sandboxId
-          ? `https://codesandbox.io/s/${sandboxId}?file=/src/Model.${config.types ? 'tsx' : 'js'}`
+          ? `https://codesandbox.io/s/${sandboxId}?file=/src/Model.${controls.types ? 'tsx' : 'js'}`
           : '#'
       })
     }
