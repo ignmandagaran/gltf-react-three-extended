@@ -25,6 +25,22 @@ const Result = () => {
     precision: { value: 2, min: 1, max: 8, step: 1, hint: 'Number of fractional digits (default: 2)' },
   }))
 
+  const materialProps = useControls(
+    'material', 
+    {
+      roughness: { value: 0.5, min: 0, max: 1 },
+      ior: { value: 1.5, min: 1, max: 2.33 },
+      reflectivity: { value: 0.5, min: 0, max: 1 },
+      clearcoat: { value: 0, min: 0, max: 1 },
+      clearcoatRoughness: { value: 0, min: 0, max: 1 },
+      transmission: { value: 0, min: 0, max: 1 },
+      metalness: { value: 0, min: 0, max: 1 },
+      emissive: { value: "#F00" },
+      emissiveIntensity: { value: 1, min: 0, max: 100, step: 0.1 },
+      specular: { value: "#111" },
+    }
+  )
+
   const preview = useControls(
     'preview',
     {
@@ -103,14 +119,14 @@ const Result = () => {
   useControls('exports', exports, { collapsed: true }, [exports])
 
   return (
-    <div className="h-full w-screen">
+    <div className="w-screen h-full">
       {!code && !scene ? (
-        <p className="text-4xl font-bold w-screen h-screen flex justify-center items-center">Loading ...</p>
+        <p className="flex items-center justify-center w-screen h-screen text-4xl font-bold">Loading ...</p>
       ) : (
-        <div className="grid grid-cols-5 h-full">
+        <div className="grid h-full grid-cols-5">
           {code && <Code>{code}</Code>}
-          <section className="h-full w-full col-span-2">
-            {scene && <Viewer scene={scene} {...config} {...preview} />}
+          <section className="w-full h-full col-span-2">
+            {scene && <Viewer scene={scene} {...config} {...materialProps} {...preview} />}
           </section>
         </div>
       )}
